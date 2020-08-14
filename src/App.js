@@ -1,11 +1,15 @@
 import { nanoid } from "nanoid";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Todo from "./components/Todo";
 import FilterButton from "./components/FilterButton";
 import Form from "./components/Form";
 function App(props) {
   console.log("App rendered");
   const [tasks, setTasks] = useState(props.tasks);
+
+  const prevTaskLength = usePrevious(tasks.length);
+
+  const listHeadingRef = useRef(null);
   const [filter, setFilter] = useState("All");
   const FILTER_MAP = {
     All: () => true,
@@ -25,6 +29,21 @@ function App(props) {
     const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
     setTasks([...tasks, newTask]);
   }
+
+  function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
+
+  useEffect(() => {
+    if (tasks.length - prevTaskLength === -1) {
+      listHeadingRef.current.focus();
+    }
+  }, [tasks.length, prevTaskLength]);
+
   function toggleTaskCompleted(id) {
     const updatedTasks = tasks.map((task) => {
       // if this task has the same ID as the edited task
@@ -71,7 +90,9 @@ function App(props) {
   const headingText = `${taskList.length} ${tasksNoun} remaining`;
   return (
     <div className="todoapp stack-large">
-      <h1>TodoMatic</h1>
+      <h1 tabIndex="-1" ref={listHeadingRef}>
+        TodoMatic
+      </h1>
       <Form addTask={addTask} />
       <div className="filters btn-group stack-exception">{filterList}</div>
       <h2 id="list-heading">{headingText}</h2>
