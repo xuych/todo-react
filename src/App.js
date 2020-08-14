@@ -1,11 +1,17 @@
-import React from 'react';
+import React from "react";
 // import logo from './logo.svg';
 // import './App.css';
 import Todo from "./components/Todo";
 function App(props) {
   console.log(props.tasks);
-const taskList = props.tasks.map(task => 
-  <Todo id={task.id} name={task.name} completed={task.completed} key={task.id}/>)
+  const taskList = props.tasks.map((task) => (
+    <Todo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+    />
+  ));
   return (
     <div className="todoapp stack-large">
       <h1>TodoMatic</h1>
@@ -43,9 +49,7 @@ const taskList = props.tasks.map(task =>
           <span className="visually-hidden"> tasks</span>
         </button>
       </div>
-      <h2 id="list-heading">
-        3 tasks remaining
-      </h2>
+      <h2 id="list-heading">3 tasks remaining</h2>
       <ul
         role="list"
         className="todo-list stack-large stack-exception"
